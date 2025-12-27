@@ -1,0 +1,57 @@
+name = "url-shortener"
+main = "src/api/worker.ts"
+compatibility_date = "2025-06-01"
+
+# Custom domain (change to your domain)
+routes = [
+  { pattern = "your-domain.com", custom_domain = true },
+  { pattern = "www.your-domain.com", custom_domain = true }
+]
+
+# Static assets (React build output)
+[assets]
+directory = "dist"
+binding = "ASSETS"
+html_handling = "none"
+not_found_handling = "none"
+
+# D1 Database binding
+# Create with: wrangler d1 create url-shortener-db
+[[d1_databases]]
+binding = "DB"
+database_name = "url-shortener-db"
+database_id = "YOUR_D1_DATABASE_ID"
+
+# KV Namespace binding (for caching)
+# Create with: wrangler kv:namespace create CACHE
+[[kv_namespaces]]
+binding = "CACHE"
+id = "YOUR_KV_NAMESPACE_ID"
+
+# Scheduled worker for cleanup (runs daily at midnight UTC)
+[triggers]
+crons = ["0 0 * * *"]
+
+# Environment variables (production)
+[vars]
+URL_EXPIRY_DAYS = "14"
+RATE_LIMIT_PER_MINUTE = "10"
+RATE_LIMIT_PER_DAY = "100"
+
+# Development environment - unlimited rate limits
+[env.dev]
+name = "url-shortener-dev"
+
+[env.dev.vars]
+URL_EXPIRY_DAYS = "14"
+RATE_LIMIT_PER_MINUTE = "999999"
+RATE_LIMIT_PER_DAY = "999999"
+
+[[env.dev.d1_databases]]
+binding = "DB"
+database_name = "url-shortener-db"
+database_id = "YOUR_D1_DATABASE_ID"
+
+[[env.dev.kv_namespaces]]
+binding = "CACHE"
+id = "YOUR_KV_NAMESPACE_ID"
