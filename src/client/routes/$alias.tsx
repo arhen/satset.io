@@ -205,12 +205,12 @@ function RedirectPage({ originalUrl }: RedirectPageProps) {
 				isDarkMode ? "bg-[#121212]" : "bg-[#fbfbfb]",
 			)}
 		>
-			<div className="flex flex-col items-center text-center">
-				{/* Main content - Title + Arrow/Countdown + URL in one line */}
-				<div className="flex items-center gap-3">
+			<div className="flex max-w-md flex-col items-center px-4 text-center md:max-w-none md:px-0">
+				{/* Title row */}
+				<div className="flex items-center gap-2">
 					<span
 						className={clsx(
-							"bg-clip-text text-2xl font-medium tracking-tight text-transparent md:text-3xl",
+							"bg-clip-text text-xl font-medium tracking-tight text-transparent md:text-3xl",
 							isDarkMode
 								? "bg-linear-to-r from-white to-gray-400"
 								: "bg-linear-to-r from-gray-900 to-gray-600",
@@ -229,7 +229,7 @@ function RedirectPage({ originalUrl }: RedirectPageProps) {
 								initial={{ scale: 0.8 }}
 								animate={{ scale: 1 }}
 								exit={{ scale: 0.8 }}
-								className="relative flex h-10 w-10 items-center justify-center"
+								className="relative flex h-10 w-10 shrink-0 items-center justify-center"
 							>
 								{/* Background circle */}
 								<svg
@@ -283,16 +283,16 @@ function RedirectPage({ originalUrl }: RedirectPageProps) {
 						) : (
 							<motion.span
 								key="arrow"
-								animate={{ x: [0, 5, 0] }}
+								animate={{ y: [0, 3, 0] }}
 								transition={{
-									x: {
+									y: {
 										duration: 1.5,
 										repeat: Number.POSITIVE_INFINITY,
 										ease: "easeInOut",
 									},
 								}}
 								className={clsx(
-									"text-2xl md:text-3xl",
+									"hidden text-2xl md:inline md:text-3xl",
 									isDarkMode ? "text-gray-400" : "text-gray-500",
 								)}
 							>
@@ -300,52 +300,53 @@ function RedirectPage({ originalUrl }: RedirectPageProps) {
 							</motion.span>
 						)}
 					</AnimatePresence>
-
-					<a
-						href={originalUrl}
-						title={originalUrl}
-						className={clsx(
-							"w-64 truncate text-left text-base transition-colors md:w-96 md:text-lg",
-							isDarkMode
-								? "text-teal-400 hover:text-teal-300"
-								: "text-teal-600 hover:text-teal-500",
-						)}
-						style={{ fontFamily: "Iosevka, monospace" }}
-						onMouseEnter={() => {
-							// Delay before pausing to allow mouse to pass by
-							hoverTimeoutRef.current = setTimeout(() => {
-								setIsPaused(true);
-							}, 500);
-						}}
-						onMouseLeave={() => {
-							// Clear pending pause if mouse leaves quickly
-							if (hoverTimeoutRef.current) {
-								clearTimeout(hoverTimeoutRef.current);
-							}
-							setIsPaused(false);
-						}}
-					>
-						{displayedUrl}
-						{isDecrypting && (
-							<motion.span
-								animate={{ opacity: [1, 0.3] }}
-								transition={{ duration: 0.1, repeat: Number.POSITIVE_INFINITY }}
-								className={isDarkMode ? "text-teal-400" : "text-teal-600"}
-							>
-								_
-							</motion.span>
-						)}
-					</a>
 				</div>
+
+				{/* URL - separate row on mobile */}
+				<a
+					href={originalUrl}
+					title={originalUrl}
+					className={clsx(
+						"mt-4 w-full truncate text-center text-base transition-colors md:mt-2 md:w-auto md:max-w-md md:text-lg",
+						isDarkMode
+							? "text-teal-400 hover:text-teal-300"
+							: "text-teal-600 hover:text-teal-500",
+					)}
+					style={{ fontFamily: "Iosevka, monospace" }}
+					onMouseEnter={() => {
+						// Delay before pausing to allow mouse to pass by
+						hoverTimeoutRef.current = setTimeout(() => {
+							setIsPaused(true);
+						}, 500);
+					}}
+					onMouseLeave={() => {
+						// Clear pending pause if mouse leaves quickly
+						if (hoverTimeoutRef.current) {
+							clearTimeout(hoverTimeoutRef.current);
+						}
+						setIsPaused(false);
+					}}
+				>
+					{displayedUrl}
+					{isDecrypting && (
+						<motion.span
+							animate={{ opacity: [1, 0.3] }}
+							transition={{ duration: 0.1, repeat: Number.POSITIVE_INFINITY }}
+							className={isDarkMode ? "text-teal-400" : "text-teal-600"}
+						>
+							_
+						</motion.span>
+					)}
+				</a>
 
 				{/* Helper text below */}
 				<p
 					className={clsx(
-						"mt-6 flex items-center gap-1.5 self-start text-sm",
+						"mt-6 flex flex-wrap items-center justify-center gap-1.5 text-center text-sm",
 						isDarkMode ? "text-gray-500" : "text-gray-400",
 					)}
 				>
-					<span>Tips: preview link with hover before redirect or</span>
+					<span>Press</span>
 					<kbd
 						className={clsx(
 							"rounded px-1.5 py-0.5 text-[10px]",
@@ -356,7 +357,7 @@ function RedirectPage({ originalUrl }: RedirectPageProps) {
 					>
 						Enter
 					</kbd>
-					<span>to go</span>
+					<span>to go now</span>
 				</p>
 			</div>
 		</div>
