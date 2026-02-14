@@ -22,7 +22,7 @@ export const urlSchema = z.object({
 			(value) => (typeof value === "string" ? normalizeUrlInput(value) : value),
 			z.string().url("Invalid URL"),
 		)
-		.refine((url) => new URL(url).protocol === "https:", {
+		.refine((url) => url.toLowerCase().startsWith("https://"), {
 			message: "Only HTTPS URLs are allowed",
 		})
 		.refine(
