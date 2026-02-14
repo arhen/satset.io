@@ -64,6 +64,9 @@ const createApp = () =>
 				}
 
 				let { alias, original_url } = body;
+				if (!/^[A-Za-z][A-Za-z\d+\-.]*:\/\//.test(original_url)) {
+					original_url = `https://${original_url}`;
+				}
 
 				if (!isValidUrl(original_url)) {
 					return errorResponse("Invalid URL", 400);
