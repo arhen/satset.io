@@ -27,6 +27,7 @@ import { AliasParams, CreateUrlRequest } from "./schemas";
 import type { Env } from "./types";
 
 let currentEnv: Env;
+const HAS_URI_SCHEME_PATTERN = /^[A-Za-z][A-Za-z\d+\-.]*:\/\//;
 
 const createApp = () =>
 	new Elysia({ adapter: CloudflareAdapter })
@@ -64,7 +65,7 @@ const createApp = () =>
 				}
 
 				let { alias, original_url } = body;
-				if (!/^[A-Za-z][A-Za-z\d+\-.]*:\/\//.test(original_url)) {
+				if (!HAS_URI_SCHEME_PATTERN.test(original_url)) {
 					original_url = `https://${original_url}`;
 				}
 
