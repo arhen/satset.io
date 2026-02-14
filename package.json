@@ -14,7 +14,7 @@
     "lint:fix": "biome check --write .",
     "db:init": "wrangler d1 execute url-shortener-db --local --file=src/db/schema.sql",
     "db:migrate": "wrangler d1 execute url-shortener-db --file=src/db/schema.sql",
-    "deploy": "bun run build && wrangler deploy"
+    "deploy": "bun run build && wrangler deploy src/api/worker.ts --name url-shortener --compatibility-date 2025-06-01"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.10",
