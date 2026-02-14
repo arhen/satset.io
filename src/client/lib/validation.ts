@@ -1,6 +1,15 @@
 import { z } from "zod";
 import { ALIAS_MAX_LENGTH } from "./constants";
 
+const HAS_URI_SCHEME_PATTERN = /^[A-Za-z][A-Za-z\d+\-.]*:\/\//;
+
+export const normalizeUrlInput = (url: string): string => {
+	const trimmed = url.trim();
+	if (!trimmed) return trimmed;
+	if (HAS_URI_SCHEME_PATTERN.test(trimmed)) return trimmed;
+	return `https://${trimmed}`;
+};
+
 const isIpAddress = (hostname: string): boolean => {
 	if (/^(\d{1,3}\.){3}\d{1,3}$/.test(hostname)) return true;
 	if (hostname.includes(":") || hostname.startsWith("[")) return true;
@@ -9,9 +18,11 @@ const isIpAddress = (hostname: string): boolean => {
 
 export const urlSchema = z.object({
 	url: z
-		.string()
-		.url("Invalid URL")
-		.refine((url) => url.startsWith("https://"), {
+		.preprocess(
+			(value) => (typeof value === "string" ? normalizeUrlInput(value) : value),
+			z.string().url("Invalid URL"),
+		)
+		.refine((url) => new URL(url).protocol === "https:", {
 			message: "Only HTTPS URLs are allowed",
 		})
 		.refine(
