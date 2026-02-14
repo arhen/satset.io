@@ -15,18 +15,18 @@ A fast, no-nonsense URL shortener. No login, no tracking, just get the job done.
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Runtime** | [Bun](https://bun.sh) (dev) + [Cloudflare Workers](https://workers.cloudflare.com) (prod) |
-| **Backend** | [Elysia](https://elysiajs.com) |
-| **Frontend** | [React 19](https://react.dev) |
-| **Routing** | [TanStack Router](https://tanstack.com/router) (file-based) |
-| **Data Fetching** | [TanStack Query](https://tanstack.com/query) |
-| **Forms** | [React Hook Form](https://react-hook-form.com) + [Zod](https://zod.dev) |
-| **Styling** | [Tailwind CSS v4](https://tailwindcss.com) |
-| **Animations** | [Framer Motion](https://motion.dev) |
-| **Database** | [Cloudflare D1](https://developers.cloudflare.com/d1) (SQLite) |
-| **Cache** | [Cloudflare KV](https://developers.cloudflare.com/kv) |
+| Layer             | Technology                                                                                |
+| ----------------- | ----------------------------------------------------------------------------------------- |
+| **Runtime**       | [Bun](https://bun.sh) (dev) + [Cloudflare Workers](https://workers.cloudflare.com) (prod) |
+| **Backend**       | [Elysia](https://elysiajs.com)                                                            |
+| **Frontend**      | [React 19](https://react.dev)                                                             |
+| **Routing**       | [TanStack Router](https://tanstack.com/router) (file-based)                               |
+| **Data Fetching** | [TanStack Query](https://tanstack.com/query)                                              |
+| **Forms**         | [React Hook Form](https://react-hook-form.com) + [Zod](https://zod.dev)                   |
+| **Styling**       | [Tailwind CSS v4](https://tailwindcss.com)                                                |
+| **Animations**    | [Framer Motion](https://motion.dev)                                                       |
+| **Database**      | [Cloudflare D1](https://developers.cloudflare.com/d1) (SQLite)                            |
+| **Cache**         | [Cloudflare KV](https://developers.cloudflare.com/kv)                                     |
 
 ## Architecture
 
@@ -138,6 +138,7 @@ The app generates short URLs **locally** for instant UX, then syncs to the backe
 ```
 
 **Key points:**
+
 - Alias + QR generated **client-side** (zero latency)
 - Sync only happens when user **commits** (copies link or downloads QR)
 - Failed syncs retry with **exponential backoff** (up to 5 attempts)
@@ -202,7 +203,3 @@ wrangler d1 execute url-shortener-db --remote --file=src/api/db/schema.sql
 # Deploy
 bun run deploy
 ```
-
-## License
-
-MIT
