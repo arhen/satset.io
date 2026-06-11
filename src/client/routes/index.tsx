@@ -8,8 +8,6 @@ import {
 	downloadQRCodeFromDataUrl,
 	generateQRCodePNG,
 } from "../../api/lib/qrcode";
-import { ThemeToggle } from "../components/ThemeToggle";
-import { Toast } from "../components/Toast";
 import {
 	ArrowRightIcon,
 	CopyIcon,
@@ -17,13 +15,20 @@ import {
 	LightningLogo,
 	QRIcon,
 } from "../components/icons";
+import { ThemeToggle } from "../components/ThemeToggle";
+import { Toast } from "../components/Toast";
 import { useDecryptAnimation } from "../hooks/useDecryptAnimation";
 import { useSyncStatus } from "../hooks/useSyncStatus";
 import { useUrlShortener } from "../hooks/useUrlShortener";
 import { ALIAS_MAX_LENGTH, getBaseUrl, getShortUrl } from "../lib/constants";
 import { isOnline } from "../lib/sync";
 import { useTheme } from "../lib/useTheme";
-import { isValidAlias, urlSchema, type UrlFormData } from "../lib/validation";
+import {
+	isValidAlias,
+	normalizeUrlInput,
+	type UrlFormData,
+	urlSchema,
+} from "../lib/validation";
 
 function HomePage() {
 	const { isDarkMode, toggleTheme } = useTheme();
@@ -87,7 +92,6 @@ function HomePage() {
 		setValue,
 		watch,
 		clearErrors,
-		setError,
 	} = useForm<UrlFormData>({
 		resolver: zodResolver(urlSchema),
 		mode: "onSubmit",
@@ -123,24 +127,13 @@ function HomePage() {
 	const handlePaste = useCallback(
 		(e: React.ClipboardEvent<HTMLInputElement>) => {
 			const pastedText = e.clipboardData.getData("text").trim();
-
-			if (
-				pastedText.startsWith("http://") ||
-				pastedText.startsWith("https://")
-			) {
+			if (pastedText.length > 0) {
 				e.preventDefault();
-				setValue("url", pastedText);
+				setValue("url", normalizeUrlInput(pastedText));
 				setTimeout(() => handleSubmit(onSubmit)(), 100);
-			} else if (pastedText.length > 0) {
-				e.preventDefault();
-				setValue("url", pastedText);
-				setError("url", {
-					type: "manual",
-					message: "Only HTTPS URLs are allowed",
-				});
 			}
 		},
-		[setValue, handleSubmit, onSubmit, setError],
+		[setValue, handleSubmit, onSubmit],
 	);
 
 	const watchedUrl = watch("url");

@@ -65,6 +65,11 @@ const createApp = () =>
 				}
 
 				let { alias, original_url } = body;
+				original_url = original_url?.trim() ?? "";
+				if (!original_url) {
+					return errorResponse("URL is required", 400);
+				}
+
 				if (!HAS_URI_SCHEME_PATTERN.test(original_url)) {
 					original_url = `https://${original_url}`;
 				}
